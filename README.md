@@ -1,2 +1,5 @@
-# jetstream-search-sra-proteins
-Use diamond to search the SRA
+# diamond-search
+
+    Usage: submit-dag <file with list of SRA IDs> <reference file>
+    Example: submit-dag tests/01/sra_ids.txt tests/01/JQ995537.faa
+
