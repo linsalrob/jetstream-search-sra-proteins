@@ -4,8 +4,8 @@ Universe = vanilla
 Requirements = SRA_Wrangler_Mounted == True
 Rank = DaemonStartTime
 request_cpus = 1
-request_memory = 1.5 GB
-request_disk = 2 GB
+request_memory = 10 GB
+request_disk = 5 GB
 
 executable = ../search.sh
 arguments = $REF_BASENAME $SRA_ID_LIST

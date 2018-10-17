@@ -76,7 +76,7 @@ OUTPUT_FILES=""
 for SRA_ID in `cat $SRA_IDS | sort | uniq`; do
    
     # TODO: handle missing inputs smarter way
-    if [ ! -e /nas/wrangler/NCBI/SRA/Downloads/fastq/$SRA_ID.fastq.gz ]; then
+    if [ ! -s /nas/wrangler/NCBI/SRA/Downloads/fastq/$SRA_ID.fastq.gz ]; then
         echo "Warning: Missing SRA data: $SRA_ID"
         continue
     fi
