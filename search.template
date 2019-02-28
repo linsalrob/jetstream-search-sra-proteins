@@ -4,7 +4,7 @@ Universe = vanilla
 Requirements = SRA_Wrangler_Mounted == True
 Rank = DaemonStartTime
 request_cpus = 1
-request_memory = 10 GB
+request_memory = 9 GB
 request_disk = 5 GB
 
 executable = ../search.sh
@@ -32,6 +32,7 @@ periodic_remove = JobStatus == 5 && NumJobStarts >= 5
 
 # extra attributes
 +wf_run_id = "$RUN_ID"
++airavata_username = "$AIRAVATA_USERNAME"
 
 queue 1
 
