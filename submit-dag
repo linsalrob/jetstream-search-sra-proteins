@@ -8,6 +8,12 @@ if [ ! -n "$1" -o ! -n "$2" ]; then
         exit $E_BADARGS
 fi
 
+# always run dos2unix on the sra ids file
+dos2unix --quiet $1
+
+# always run dos2unix on the fasta file
+dos2unix --quiet $2 
+
 # ensure the files are in ASCII format
 if ! (file --brief $1 | grep ASCII) >/dev/null 2>&1; then
     echo "ERROR: id list file is not in ASCII format"
@@ -18,9 +24,6 @@ if ! (file --brief $2 | grep ASCII) >/dev/null 2>&1; then
     exit 1
 fi
 
-# always run dos2unix on the fasta file
-dos2unix --quiet $2 
-
 # also run a fasta check
 if ! /usr/local/fasta_validator/fasta_validate -v $2 2>&1; then
     echo "ERROR: Reference file is not in valid FASTA format"
@@ -30,10 +33,10 @@ fi
 SRA_IDS=`basename $1`
 REF_FILENAME=`basename $2`
 
-export REF_BASENAME=`echo $REF_FILENAME | perl -p -e 's/\.[a-zA-Z]+$//'`
-if [ "$REF_BASENAME" = "$REF_FILENAME" ]; then
+export REF_BASENAME=`echo $REF_FILENAME | perl -p -i -e 's/\.[a-zA-Z]+$//'`
+if [ ! -e "$REF_BASENAME.fna" ]; then
     # ref file came in without extension - make a copy
-    cp $REF_FILENAME $REF_FILENAME.fna
+    cp $REF_FILENAME $REF_BASENAME.fna
     REF_FILENAME="$REF_FILENAME.fna"
 fi
 
@@ -83,13 +86,13 @@ SUB_DIR=0
 SRA_ID_LIST=""
 OUTPUT_FILES=""
 for SRA_ID in `cat $SRA_IDS | sort | uniq`; do
-   
+
     # TODO: handle missing inputs smarter way
-    if [ ! -s /nas/wrangler/NCBI/SRA/Downloads/fastq/$SRA_ID.fastq.gz ]; then
+    if [ ! -e /nas/sra-data/fasta/current/${SRA_ID:0:3}/${SRA_ID:0:6}/${SRA_ID}.fasta.gz ]; then
         echo "Warning: Missing SRA data: $SRA_ID"
         continue
     fi
-
+   
     SRA_COUNT=$(($SRA_COUNT + 1))
 
     # for the job template
